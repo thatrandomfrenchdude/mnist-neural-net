@@ -7,8 +7,8 @@ from datetime import datetime as dt
 input_nodes = 784
 hidden_nodes = 100
 output_nodes = 10
-
-learning_rate = 0.15  # 0.3 is .94, 0.1 is .9523, 0.15 is .9527
+learning_rate = 0.1  # 0.3 is .94, 0.1 is .9523, 0.15 is .9527, 0.2 is .9511
+training_epochs = 7
 
 n = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 
@@ -20,15 +20,16 @@ with open("data/mnist_train.csv", "r") as f:
     train_data = f.readlines()
 
 # train neural network
-for r in train_data:
-    vals = r.split(",")
-    input = (np.asfarray(vals[1:]) / 255.0 * 0.99) + 0.01
-    # img_array = np.asfarray(input).reshape((28,28))
-    # matplotlib.pyplot.imshow(img_array, cmap="Greens", interpolation="None")
-    # matplotlib.pyplot.show()
-    target = np.zeros(output_nodes) + 0.01
-    target[int(vals[0])] = 0.99
-    n.train(input, target)
+for _ in range(training_epochs):
+    for r in train_data:
+        vals = r.split(",")
+        input = (np.asfarray(vals[1:]) / 255.0 * 0.99) + 0.01
+        # img_array = np.asfarray(input).reshape((28,28))
+        # matplotlib.pyplot.imshow(img_array, cmap="Greens", interpolation="None")
+        # matplotlib.pyplot.show()
+        target = np.zeros(output_nodes) + 0.01
+        target[int(vals[0])] = 0.99
+        n.train(input, target)
 
 test_start = dt.now()
 print("training complete")
@@ -59,4 +60,6 @@ print(f"test time: {end - test_start}s\n")
 # calculate performance score
 print("Results:")
 scorecard_array = np.asarray(scorecard)
-print(f"performance = {scorecard_array.sum() / scorecard_array.size}\n")
+print(f"performance = {scorecard_array.sum() / scorecard_array.size}")
+print(f"learning rate: {learning_rate}")
+print(f"epochs: {training_epochs}")
