@@ -2,6 +2,11 @@ from neural_net import NeuralNetwork
 import numpy as np
 import matplotlib.pyplot
 from datetime import datetime as dt
+import scipy.ndimage
+
+# TODO:
+# generalize layers to allow for additional configurations
+# add ability to save/load weights
 
 # configure and initialize neural network
 input_nodes = 784
@@ -30,6 +35,22 @@ for _ in range(training_epochs):
         target = np.zeros(output_nodes) + 0.01
         target[int(vals[0])] = 0.99
         n.train(input, target)
+
+        # train using rotated variations
+        ## create +/- x degrees rotated variations
+        # x = 10
+        # inputs_plusx_img = scipy.ndimage.rotate(input.reshape(28,28), x, cval=0.01, order=1, reshape=False)
+        # n.train(inputs_plusx_img.reshape(784), target)
+        # # rotated clockwise by x degrees
+        # inputs_minusx_img = scipy.ndimage.rotate(input.reshape(28,28), -1 * x, cval=0.01, order=1, reshape=False)
+        # n.train(inputs_minusx_img.reshape(784), target)
+        
+        # rotated anticlockwise by 10 degrees
+        # inputs_plus10_img = scipy.ndimage.rotate(inputs.reshape(28,28), 10, cval=0.01, order=1, reshape=False)
+        # n.train(inputs_plus10_img.reshape(784), targets)
+        # rotated clockwise by 10 degrees
+        # inputs_minus10_img = scipy.ndimage.rotate(inputs.reshape(28,28), -10, cval=0.01, order=1, reshape=False)
+        # n.train(inputs_minus10_img.reshape(784), targets)
 
 test_start = dt.now()
 print("training complete")
