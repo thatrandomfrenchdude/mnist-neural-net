@@ -5,7 +5,7 @@ from datetime import datetime as dt
 
 # configure and initialize neural network
 input_nodes = 784
-hidden_nodes = 100
+hidden_nodes = 200
 output_nodes = 10
 learning_rate = 0.1  # 0.3 is .94, 0.1 is .9523, 0.15 is .9527, 0.2 is .9511
 training_epochs = 7
@@ -61,5 +61,20 @@ print(f"test time: {end - test_start}s\n")
 print("Results:")
 scorecard_array = np.asarray(scorecard)
 print(f"performance = {scorecard_array.sum() / scorecard_array.size}")
+print(f"error rate = {1 - (scorecard_array.sum() / scorecard_array.size)}")
 print(f"learning rate: {learning_rate}")
 print(f"epochs: {training_epochs}")
+
+# run the network backwards, given a label, see what image it produces 
+# labels to test
+labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+for label in labels:
+    # create the output signals for this label
+    targets = np.zeros(output_nodes) + 0.01
+    # all_values[0] is the target label for this record
+    targets[label] = 0.99
+    # get image data
+    image_data = n.backquery(targets)
+    # plot image data
+    matplotlib.pyplot.imshow(image_data.reshape(28,28), cmap='Greens', interpolation='None')
+    matplotlib.pyplot.show()

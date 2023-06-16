@@ -24,6 +24,7 @@ class NeuralNetwork:
 
         # activation function
         self.activation_function = lambda x: sp.expit(x)
+        self.inverse_activation_function = lambda x: sp.logit(x)
 
     def train(self, inputs_list, targets_list):
         # convert inputs and targets to 2d arrays
@@ -63,3 +64,31 @@ class NeuralNetwork:
         output_outputs = self.activation_function(output_inputs)
 
         return output_outputs
+
+    def backquery(self, targets):
+        # transpose targets list to a vertical array
+        final_outputs = np.array(targets, ndmin=2).T
+
+        # calculate the signal into the final output layer
+        final_inputs = self.inverse_activation_function(final_outputs)
+
+        # calculate the signal out of the hidden layer
+        hidden_outputs = np.dot(self.hidden2output_w.T, final_inputs)
+        # scale them back to 0.01 to .99
+        hidden_outputs -= np.min(hidden_outputs)
+        hidden_outputs /= np.max(hidden_outputs)
+        hidden_outputs *= 0.98
+        hidden_outputs += 0.01
+
+        # calculate the signal into the hidden layer
+        hidden_inputs = self.inverse_activation_function(hidden_outputs)
+
+        # calculate the signal out of the input layer
+        inputs = np.dot(self.input2hidden_w.T, hidden_inputs)
+        # scale them back to 0.01 to .99
+        inputs -= np.min(inputs)
+        inputs /= np.max(inputs)
+        inputs *= 0.98
+        inputs += 0.01
+
+        return inputs
