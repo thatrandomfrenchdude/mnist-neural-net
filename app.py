@@ -8,7 +8,7 @@ input_nodes = 784
 hidden_nodes = 100
 output_nodes = 10
 
-learning_rate = 0.3
+learning_rate = 0.15  # 0.3 is .94, 0.1 is .9523, 0.15 is .9527
 
 n = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 
